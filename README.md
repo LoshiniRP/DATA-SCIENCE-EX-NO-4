@@ -1,7 +1,6 @@
 # EXNO:4-DS
 # AIM:
-To read the given data and perform Feature Scaling and Feature Selection process and save the
-data to a file.
+To read the given data and perform Feature Scaling and Feature Selection process and save the data to a file.
 
 # ALGORITHM:
 STEP 1: Read the given Data.
@@ -35,6 +34,93 @@ The feature selection techniques used are:
 3. Embedded Method
 
 # CODING AND OUTPUT:
-       # INCLUDE YOUR CODING AND OUTPUT SCREENSHOTS HERE
+```
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
+df = pd.read_csv('D:\Bmi.csv') 
+print(df.head())
+
+# Handle Missing Values
+df = df.dropna()
+
+# Standard Scaling
+df_std = df.copy()
+scaler_std = StandardScaler()
+df_std[['Height', 'Weight']] = scaler_std.fit_transform(df_std[['Height', 'Weight']])
+print(df_std.head())
+
+# Min-Max Scaling
+df_minmax = df.copy()
+scaler_minmax = MinMaxScaler()
+df_minmax[['Height', 'Weight']] = scaler_minmax.fit_transform(df_minmax[['Height', 'Weight']])
+print(df_minmax.head())
+
+# MaxAbs Scaling
+df_maxabs = df.copy()
+scaler_maxabs = MaxAbsScaler()
+df_maxabs[['Height', 'Weight']] = scaler_maxabs.fit_transform(df_maxabs[['Height', 'Weight']])
+print(df_maxabs.head())
+
+# Robust Scaling
+df_robust = df.copy()
+scaler_robust = RobustScaler()
+df_robust[['Height', 'Weight']] = scaler_robust.fit_transform(df_robust[['Height', 'Weight']])
+print(df_robust.head())
+
+# Save scaled datasets
+df_std.to_csv("BMI_StandardScaled.csv", index=False)
+df_minmax.to_csv("BMI_MinMaxScaled.csv", index=False)
+df_maxabs.to_csv("BMI_MaxAbsScaled.csv", index=False)
+df_robust.to_csv("BMI_RobustScaled.csv", index=False)
+
+# Convert categorical column (Gender) to numeric
+df_fs = df.copy()
+df_fs['Gender'] = df_fs['Gender'].map({'Male': 0, 'Female': 1})
+
+# Features and target
+X = df_fs[['Gender', 'Height', 'Weight']]
+y = df_fs['Index']   # target column
+
+from sklearn.feature_selection import SelectKBest, f_classif
+
+selector = SelectKBest(score_func=f_classif, k=2)
+X_filter = selector.fit_transform(X, y)
+
+print(X.columns[selector.get_support()])
+
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression(max_iter=5000, solver='liblinear')
+
+rfe = RFE(model, n_features_to_select=2)
+X_wrapper = rfe.fit_transform(X, y)
+
+print(X.columns[rfe.get_support()])
+
+from sklearn.linear_model import Lasso
+
+lasso = Lasso(alpha=0.01)
+lasso.fit(X, y)
+
+selected_features = X.columns[lasso.coef_ != 0]
+
+print(selected_features)
+
+# Save dataset with selected features
+selected_cols = X.columns[selector.get_support()]
+df_selected = df_fs[selected_cols.tolist() + ['Index']]
+
+df_selected.to_csv("BMI_SelectedFeatures.csv", index=False)
+```
+
+<img width="1341" height="600" alt="image" src="https://github.com/user-attachments/assets/67937d3d-227f-4599-989c-75f886d7f4c6" />
+
+<img width="1342" height="558" alt="image" src="https://github.com/user-attachments/assets/e04109ed-8a3e-4b67-9a92-b4645576ceda" />
+
+<img width="1339" height="721" alt="image" src="https://github.com/user-attachments/assets/ec7d6b64-0b83-403d-91f4-dc069d595f6a" />
+
+
 # RESULT:
-       # INCLUDE YOUR RESULT HERE
+Thus, the given data and perform Feature Scaling and Feature Selection process and save the data to a file has been completed successfully.
