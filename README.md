@@ -28,11 +28,11 @@ Feature selection is to find the best set of features that allows one to build u
 
 The feature selection techniques used are:
 
-1.Filter Method
+1. Filter Method
 
-2.Wrapper Method
+2. Wrapper Method
 
-3.Embedded Method
+3. Embedded Method
 
 # CODING AND OUTPUT:
        # INCLUDE YOUR CODING AND OUTPUT SCREENSHOTS HERE
